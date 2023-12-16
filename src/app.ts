@@ -9,11 +9,14 @@ import { boardRouter } from "./routes/board"
 import { matchRouter } from "./routes/match"
 import { schoolRouter } from "./routes/school"
 import { handleErrors } from "./middlewares/errorHandling"
+import {logRequests} from "./middlewares/logging";
 
 export const app = express();
 
 app.use(bodyParser.json())
 app.use(cors({ origin: true, credentials: true }))
+
+app.use(logRequests)
 
 app.use(userRouter)
 app.use(authRouter)

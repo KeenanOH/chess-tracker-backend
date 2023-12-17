@@ -10,22 +10,20 @@ export const schoolRouter = express.Router()
 schoolRouter.get("/schools", async (_, res) => {
     const schools = await School.find()
 
-    return res.json(schools.map((school) => {
-        return { id: school._id, name: school.name }
-    }))
+    return res.json(schools)
 })
 
-schoolRouter.post("/school", async (req, res) => {
+schoolRouter.post("/schools", async (req, res) => {
     const { name } = req.body
     if (!name) return res.status(400).json({ message: "Missing parameters" })
     if (await School.findOne({name})) return res.status(409).json({message: "School already exists"})
 
     const school = await School.create({name})
 
-    return res.status(200).json({id: school.id, name: school.name})
+    return res.json(school)
 })
 
-schoolRouter.delete("/school/:schoolId", async function (req, res) {
+schoolRouter.delete("/schools/:schoolId", async function (req, res) {
     const {schoolId} = req.params
     if (!schoolId) return res.status(400).json({message: "Missing parameters"})
 

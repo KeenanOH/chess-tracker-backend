@@ -7,6 +7,6 @@ export interface ISchool {
 
 const schoolSchema = new mongoose.Schema<ISchool>({
     name: { type: String, required: true }
-});
+}, { versionKey: false });
 
 export const School = mongoose.model<ISchool>("schools", schoolSchema)

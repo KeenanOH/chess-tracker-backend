@@ -1,12 +1,23 @@
 import express from "express"
 
 import { auth } from "../middlewares/auth"
-import { Board } from "../models/mongoose/board"
+import { Board, PopulatedBoard } from "../models/mongoose/board"
 import { IMatch } from "../models/mongoose/match"
 
 export const boardRouter = express.Router()
     .use(auth)
 
+boardRouter.get("/boards/:boardId", async (req, res) => {
+    const { boardId } = req.params
+    if (!boardId) return res.status(400).json({ message: "Missing parameters" })
+
+    const board = await Board.findOne({ _id: boardId })
+        .populate<PopulatedBoard>([{ path: "match" }, { path: "match", populate: [{ path: "homeSchool" }, { path: "awaySchool" }] }])
+
+    if (!board) return res.status(409).json({ message: "Board does not exist" })
+
+    return res.json(board)
+})
 
 boardRouter.get("/boards", async (req, res) => {
     const { matchId } = req.query
@@ -14,18 +25,10 @@ boardRouter.get("/boards", async (req, res) => {
 
     const boards = await Board.find({ match: matchId })
 
-    return res.status(200).json(boards.map((board) => {
-        return {
-            id: board.id,
-            rank: board.rank,
-            homePlayer: board.homePlayer,
-            awayPlayer: board.awayPlayer,
-            result: board.result
-        }
-    }))
+    return res.status(200).json(boards)
 })
 
-boardRouter.put("/board/:boardId", async (req, res) => {
+boardRouter.put("/boards/:boardId", async (req, res) => {
     if (!req.currentUser) return res.status(401)
 
     const { boardId } = req.params
@@ -51,7 +54,5 @@ boardRouter.put("/board/:boardId", async (req, res) => {
     board = await Board.findByIdAndUpdate(boardId, {homePlayer, awayPlayer, result})
     if (!board) return res.status(409).json({ message: "Board does not exist" })
 
-    return res.status(200).json(
-        { id: board.id, homePlayer, awayPlayer, result }
-    )
+    return res.status(200).json(board)
 })

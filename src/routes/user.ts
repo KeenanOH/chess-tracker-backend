@@ -18,7 +18,7 @@ userRouter.get("/users", auth, async (req, res) => {
     }))
 })
 
-userRouter.post("/user", auth, async (req, res) => {
+userRouter.post("/users", auth, async (req, res) => {
     if (!req.currentUser || !req.currentUser.isAdmin) return res.sendStatus(401)
 
     const {username, password, schoolId} = req.body
@@ -30,10 +30,10 @@ userRouter.post("/user", auth, async (req, res) => {
 
     const user = await User.create({ username, password: await bcrypt.hash(password, 10), school: schoolId })
 
-    return res.status(200).json({ id: user.id, username, password, schoolId })
+    return res.json({ id: user.id, username, password, schoolId })
 })
 
-userRouter.delete("/user/:userId", auth, async (req, res) => {
+userRouter.delete("/users/:userId", auth, async (req, res) => {
     if (!req.currentUser || !req.currentUser.isAdmin) return res.sendStatus(401)
 
     const { userId } = req.params

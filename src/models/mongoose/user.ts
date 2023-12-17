@@ -12,6 +12,6 @@ const userSchema = new mongoose.Schema<IUser>({
     password: { type: String, required: true },
     school: { type: mongoose.Types.ObjectId, ref: "schools", required: true },
     isAdmin: { type: Boolean, default: false }
-});
+}, { versionKey: false });
 
 export const User = mongoose.model<IUser>("users", userSchema)

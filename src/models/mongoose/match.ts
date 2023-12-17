@@ -10,6 +10,6 @@ const matchSchema = new mongoose.Schema<IMatch>({
     homeSchool: { type: mongoose.Types.ObjectId, ref: "schools", required: true },
     awaySchool: { type: mongoose.Types.ObjectId, ref: "schools", required: true },
     date: { type: Date, required: true }
-})
+}, { versionKey: false })
 
 export const Match = mongoose.model<IMatch>("matches", matchSchema)

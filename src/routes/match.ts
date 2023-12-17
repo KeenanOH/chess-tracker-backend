@@ -69,5 +69,5 @@ matchRouter.delete("/matches/:matchId", isAdmin, async (req, res) => {
     await Board.deleteMany({ match: matchId })
     await Match.findByIdAndDelete(matchId)
 
-    return res.status(204)
+    return res.json({ message: "Success" })
 })

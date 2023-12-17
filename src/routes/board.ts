@@ -24,6 +24,7 @@ boardRouter.get("/boards", async (req, res) => {
     if (!matchId) return res.status(400).json({ message: "Missing parameter: `matchId`" })
 
     const boards = await Board.find({ match: matchId })
+        .populate<PopulatedBoard>([{ path: "match" }, { path: "match", populate: [{ path: "homeSchool" }, { path: "awaySchool" }] }])
 
     return res.status(200).json(boards)
 })

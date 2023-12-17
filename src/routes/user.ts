@@ -41,5 +41,5 @@ userRouter.delete("/users/:userId", auth, async (req, res) => {
 
     await User.findByIdAndDelete(userId)
 
-    return res.status(204)
+    return res.json({ message: "Success" })
 })
